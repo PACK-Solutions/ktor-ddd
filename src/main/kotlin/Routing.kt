@@ -1,7 +1,8 @@
 package com.example
 
 import com.example.core.domain.GreetingId
-import com.example.core.services.GreetingService
+import com.example.core.cqrs.CreateGreetingCommand
+import com.example.core.cqrs.GetGreetingQuery
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -9,19 +10,20 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 
 fun Application.configureRouting() {
-    val service: GreetingService = ServiceRegistry.greetingService
+    val commandBus = ServiceRegistry.asyncCommandBus
+    val queryBus = ServiceRegistry.queryBus
 
     routing {
         get("/greetings/{id}") {
             val id = call.parameters["id"] ?: return@get call.respondText("Missing id", status = io.ktor.http.HttpStatusCode.BadRequest)
-            val greeting = service.get(GreetingId.parse(id))
+            val greeting = queryBus.ask(GetGreetingQuery(GreetingId.parse(id)))
             if (greeting == null) call.respond(io.ktor.http.HttpStatusCode.NotFound)
             else call.respond(GreetingDTO.fromDomain(greeting))
         }
 
         post("/greetings") {
             val req = call.receive<CreateGreetingRequest>()
-            val created = service.create(req.message)
+            val created = commandBus.execute(CreateGreetingCommand(req.message))
             call.respond(GreetingDTO.fromDomain(created))
         }
     }

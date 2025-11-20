@@ -1,10 +1,12 @@
 plugins {
-    kotlin("jvm") version "2.2.20"
+    alias(libs.plugins.kotlin.jvm)
 }
 
 group = "com.example"
 version = "0.0.1"
 
-dependencies {
-    // Pure Kotlin only; no technical dependencies allowed
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }

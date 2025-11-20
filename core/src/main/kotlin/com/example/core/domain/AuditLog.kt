@@ -11,9 +11,6 @@ value class AuditLogId(val value: UUID) {
     }
 }
 
-/**
- * A simple audit record to demonstrate multi-entity transactional save.
- */
 data class AuditLog(
     val id: AuditLogId,
     val relatedGreetingId: GreetingId,
