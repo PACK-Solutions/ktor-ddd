@@ -2,7 +2,6 @@ package com.example.core.cqrs
 
 import kotlin.reflect.KClass
 
-// Query side
 interface Query<R>
 
 interface QueryHandler<Q : Query<R>, R> {

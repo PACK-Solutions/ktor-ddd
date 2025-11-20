@@ -14,7 +14,7 @@ interface AsyncCommandBus {
 }
 
 class SimpleAsyncCommandBus(
-    handlers: Map<KClass<out Command<*>>, CommandHandler<out Command<*>, *>>, // reuse sync handlers
+    handlers: Map<KClass<out Command<*>>, CommandHandler<out Command<*>, *>>,
     middlewares: List<AsyncCommandMiddleware> = emptyList(),
 ) : AsyncCommandBus {
     private val handlerMap: Map<KClass<out Command<*>>, CommandHandler<out Command<*>, *>> = handlers
